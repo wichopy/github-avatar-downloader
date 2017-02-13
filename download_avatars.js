@@ -1,7 +1,21 @@
 var request = require('request');
+var fs = require('fs');
+
 
 console.log('Welcome to the GitHub Avatar Downloader!');
 
+function downloadImageByURL(url, filepath) {
+
+  request.get(url) // Note 1
+    .on('error', function (err) { // Note 2
+      console.log('Error with ${url}: ${err}');
+    })
+    // .on('response', function (response) {                           // Note 3
+    //   console.log('Response Status Code: ', response.statusCode);
+    // })
+    .pipe(fs.createWriteStream(`${filepath}`)); // Note 4
+}
+downloadImageByURL('https://avatars.githubusercontent.com/u/43004?v=3', "testpic.png");
 
 function getRepoContributors(repoOwner, repoName, cb) {
 
@@ -50,8 +64,8 @@ function getRepoContributors(repoOwner, repoName, cb) {
   //.pipe(cb(output)); // Note 4
 }
 
-getRepoContributors("jquery", "jquery", function (err, result) {
-  //console.log("Errors:", err);
-  //console.log("This is what we got:")
-  console.log("Result:", result);
-});
+// getRepoContributors("jquery", "jquery", function (err, result) {
+//   //console.log("Errors:", err);
+//   //console.log("This is what we got:")
+//   console.log("Result:", result);
+// });
