@@ -1,24 +1,16 @@
 var request = require('request');
 var fs = require('fs');
 
-
-console.log('Welcome to the GitHub Avatar Downloader!');
-
-function downloadImageByURL(url, filepath) {
-
-  request.get(url) // Note 1
-    .on('error', function (err) { // Note 2
+var downloadImageByURL = function downloadImageByURL(url, filepath) {
+  console.log(`Downloading avatar for Github user: ${filepath}`);
+  request.get(url)
+    .on('error', function (err) {
       console.log('Error with ${url}: ${err}');
     })
-    // .on('response', function (response) {                           // Note 3
-    //   console.log('Response Status Code: ', response.statusCode);
-    // })
-    .pipe(fs.createWriteStream(`${filepath}`)); // Note 4
-}
-downloadImageByURL('https://avatars.githubusercontent.com/u/43004?v=3', "testpic.png");
+    .pipe(fs.createWriteStream(`${filepath}`));
+};
 
 function getRepoContributors(repoOwner, repoName, cb) {
-
   var GITHUB_USER = "wichopy";
   var GITHUB_TOKEN = "38bd41f9ffdc491052c1eb573eae69d754dade9c";
   var options = {
@@ -27,45 +19,20 @@ function getRepoContributors(repoOwner, repoName, cb) {
       'User-Agent': 'request'
     }
   };
-  //console.log(options.url);
-  // var options = {
-  //   url: `https://api.github.com/repos/${repoOwner}/${repoName}}/contributors`,
-  //   //'wichopy': '38bd41f9ffdc491052c1eb573eae69d754dade9c',
-  //   //json: true
-  // };
-  // var output = "";
   request.get(options, function (e, r, data) {
-    //console.log(data);
-    //output = data;
-    //cb(data);
     if (!e && r.statusCode === 200) {
       var githubJSON = JSON.parse(data); //!!this is an array full of objects!
       for (var users of githubJSON) { //!!use of not in. 
-        cb(null, users.avatar_url);
-        //console.log(users.avatar_url)
+        cb(users.avatar_url, `./downloads/${users.login}`);
       }
     }
-  }); // Note 1
-  // .on('error', function (err) { // Note 2
-  //   throw err;
-  // })
-  // .on('response', function (response) { // Note 3
-
-  //   console.log('Response Status Code: ', response.statusCode);
-  //   console.log('Response message', response.statusMessage);
-  //   console.log('Content Type', response.headers['content-type']);
-  //   //cb(response);
-  // })
-  // .on('data', function (data) {
-  //   output += data;
-  //   //console.log(output);
-  // });
-  //console.log(output);
-  //.pipe(cb(output)); // Note 4
+  });
 }
+//Need 2 arguments from the user, am owner and a repo.
 
-// getRepoContributors("jquery", "jquery", function (err, result) {
-//   //console.log("Errors:", err);
-//   //console.log("This is what we got:")
-//   console.log("Result:", result);
-// });
+var input = process.argv.slice(2);
+if (input.length !== 2) {
+  console.log("We can't process this request. Please pass in owner and repo in order to run avatar download.")
+} else {
+  getRepoContributors(input[0], input[1], downloadImageByURL);
+}
