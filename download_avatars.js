@@ -25,7 +25,11 @@ function getRepoContributors(repoOwner, repoName, cb) {
     //output = data;
     //cb(data);
     if (!e && r.statusCode === 200) {
-      cb(null, data);
+      var githubJSON = JSON.parse(data); //!!this is an array full of objects!
+      for (var users of githubJSON) { //!!use of not in. 
+        cb(null, users.avatar_url);
+        //console.log(users.avatar_url)
+      }
     }
   }); // Note 1
   // .on('error', function (err) { // Note 2

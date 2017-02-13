@@ -1,0 +1,15 @@
+https://api.github.com/users/elijahmanor/followers","following_url":"https://api.github.com/users/elijahmanor/following{/other_user}","gists_url":"https://api.github.com/user
+s/elijahmanor/gists{/gist_id}","starred_url":"https://api.github.com/users/elijahmanor/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/elijahmanor/s
+ubscriptions","organizations_url":"https://api.github.com/users/elijahmanor/orgs","repos_url":"https://api.github.com/users/elijahmanor/repos","events_url":"https://api.githu
+b.com/users/elijahmanor/events{/privacy}","received_events_url":"https://api.github.com/users/elijahmanor/received_events","type":"User","site_admin":false,"contributions":10
+},{"login":"mathiasbynens","id":81942,"avatar_url":"https://avatars.githubusercontent.com/u/81942?v=3","gravatar_id":"","url":"https://api.github.com/users/mathiasbynens","ht
+ml_url":"https://github.com/mathiasbynens","followers_url":"https://api.github.com/users/mathiasbynens/followers","following_url":"https://api.github.com/users/mathiasbynens/
+following{/other_user}","gists_url":"https://api.github.com/users/mathiasbynens/gists{/gist_id}","starred_url":"https://api.github.com/users/mathiasbynens/starred{/owner}{/re
+po}","subscriptions_url":"https://api.github.com/users/mathiasbynens/subscriptions","organizations_url":"https://api.github.com/users/mathiasbynens/orgs","repos_url":"https:/
+/api.github.com/users/mathiasbynens/repos","events_url":"https://api.github.com/users/mathiasbynens/events{/privacy}","received_events_url":"https://api.github.com/users/math
+iasbynens/received_events","type":"User","site_admin":false,"contributions":9},{"login":"pbakaus","id":43004,"avatar_url":"https://avatars.githubusercontent.com/u/43004?v=3",
+"gravatar_id":"","url":"https://api.github.com/users/pbakaus","html_url":"https://github.com/pbakaus","followers_url":"https://api.github.com/users/pbakaus/followers","follow
+ing_url":"https://api.github.com/users/pbakaus/following{/other_user}","gists_url":"https://api.github.com/users/pbakaus/gists{/gist_id}","starred_url":"https://api.github.co
+m/users/pbakaus/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/pbakaus/subscriptions","organizations_url":"https://api.github.com/users/pbakaus/org
+s","repos_url":"https://api.github.com/users/pbakaus/repos","events_url":"https://api.github.com/users/pbakaus/events{/privacy}","received_events_url":"https://api.github.com
+/users/pbakaus/received_events","type":"User","site_admin":false,"contributions":9}]
