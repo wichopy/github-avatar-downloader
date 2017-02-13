@@ -1,5 +1,6 @@
 var request = require('request');
 var fs = require('fs');
+var dotenv = require('dotenv').config();
 
 var downloadImageByURL = function downloadImageByURL(url, filepath) {
   console.log(`Downloading avatar for Github user: ${filepath}`);
@@ -11,8 +12,9 @@ var downloadImageByURL = function downloadImageByURL(url, filepath) {
 };
 
 function getRepoContributors(repoOwner, repoName, cb) {
-  var GITHUB_USER = "wichopy";
-  var GITHUB_TOKEN = "38bd41f9ffdc491052c1eb573eae69d754dade9c";
+  var GITHUB_USER = process.env.GITHUB_USER;
+  var GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+  console.log(GITHUB_TOKEN);
   var options = {
     url: `https://${GITHUB_USER}:${GITHUB_TOKEN}@api.github.com/repos/${repoOwner}/${repoName}/contributors`,
     headers: {
