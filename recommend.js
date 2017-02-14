@@ -61,9 +61,14 @@ var getStarredList = function (contributorList) {
         sortable.sort(function (a, b) {
           return b[1] - a[1];
         });
-        console.log(sortable.slice(0, 5)); // grab top 5!
+        //console.log(sortable.slice(0, 5)); // grab top 5!
+        count = 0;
+        for (var project of sortable) {
+          console.log(`[ ${project[1]} stars ] ${project[0]}`);
+          count++;
+          if (count == 5) break;
+        }
       }
-      //return starredList;
     });
   }
 };
