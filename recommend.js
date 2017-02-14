@@ -1,98 +1,69 @@
-var request = require('request');
+var q = require('bluebird');
+var rp = require('request-promise');
 var fs = require('fs');
 var dotenv = require('dotenv').config();
+var promises = [];
+var GITHUB_USER = process.env.GITHUB_USER;
+var GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+// var repoName = 'jquery';
+// var repoOwner = 'jquery';
 
-const glob_starredProjects = {}; //STORE THE PROJECT COUNT IN THIS OBJECT
-
-var countStarred = function countStartedProjects(JSONObj) { //CALLBACK FUNCTION for iterating through starred project lists.
-  //console.log(JSONObj);
-  for (var project of JSONObj) {
-    if (!(glob_starredProjects[project.full_name])) {
-      console.log("Didn't exist, add to global object" + project.full_name);
-      glob_starredProjects[project['full_name']] = 1;
-    } else {
-      console.log("exists in object, add to counter");
-      glob_starredProjects[project['full_name']] += 1;
-    }
-
-  }
-  console.log(glob_starredProjects);
-};
-
-var getContStarredList = function getContStarredList(user, cb) {
-  var GITHUB_USER = process.env.GITHUB_USER;
-  var GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+//Need 2 arguments from the user, am owner and a repo.
+var input = process.argv.slice(2);
+if (input.length !== 2) {
+  console.log("We can't process this request. Please pass in github [owner] and [repo] in order to run avatar download. \n ie: node download_avatars.js jquery jquery ")
+} else {
   var options = {
-    url: `https://${GITHUB_USER}:${GITHUB_TOKEN}@api.github.com/users/${user}/starred`,
+    url: `https://${GITHUB_USER}:${GITHUB_TOKEN}@api.github.com/repos/${input[0]}/${input[1]}/contributors`,
     headers: {
       'User-Agent': 'request'
     }
   };
-  request.get(options, function (e, r, data) {
-    //console.log(options.url);
-    //console.log(data);
-    if (e) {
-      console.log("Something went wrong, check your owner and repo.");
-    }
-    if (!e && r.statusCode === 200) {
-      var starredList = JSON.parse(data); //!!this is an array full of objects!
-      console.log(`Retreived starred repo list for:`);
-      //console.log(glob_starredProjects);
-      return cb(starredList);
-    }
+  rp(options).then(function (data) {
+    var contributorList = JSON.parse(data); //!!this is an array full of objects!
+    getStarredList(contributorList);
   });
+}
+var getStarredList = function (contributorList) {
+  var i = 0;
+  var parsedProjects = {};
+  for (var login of contributorList) {
+    var userOptions = {
+      url: `https://${GITHUB_USER}:${GITHUB_TOKEN}@api.github.com/users/${login.login}/starred`,
+      headers: {
+        'User-Agent': 'request'
+      }
+    };
+
+    rp(userOptions).then(function (data) {
+      i += 1;
+      var starredList = JSON.parse(data); //!!this is an array full of objects!
+      for (var projects of starredList) {
+        //console.log(projects.full_name);
+        //console.log(!parsedProjects.hasOwnProperty(projects.full_name));
+        if (!(parsedProjects.hasOwnProperty(projects.full_name))) {
+          //console.log("in true");
+          parsedProjects[projects.full_name] = 1;
+          //parsedProjects[projects.full_name].count = 1;
+          //parsedProjects[projects.full_name].userid = login.login;
+
+        } else {
+          //console.log("in false");
+          parsedProjects[projects.full_name] += 1;
+
+        }
+      }
+      if (i === contributorList.length) {
+        var sortable = [];
+        for (var repos in parsedProjects) {
+          sortable.push([repos, parsedProjects[repos]]); //push to array for sorting purposes.
+        }
+        sortable.sort(function (a, b) {
+          return b[1] - a[1];
+        });
+        console.log(sortable.slice(0, 5)); // grab top 5!
+      }
+      //return starredList;
+    });
+  }
 };
-
-
-//END of getContStarredList
-
-
-// function getRepoContributors(repoOwner, repoName, getStarredList, printTopFive) {
-//   var GITHUB_USER = process.env.GITHUB_USER;
-//   var GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-
-//   var options = {
-//     url: `https://${GITHUB_USER}:${GITHUB_TOKEN}@api.github.com/repos/${repoOwner}/${repoName}/contributors`,
-//     headers: {
-//       'User-Agent': 'request'
-//     }
-
-//   };
-//   request.get(options, function (e, r, data) {
-//     console.log(options.url);
-//     //console.log(data);
-//     if (e) {
-//       //console.log(data);
-//       console.log("Something went wrong, check your owner and repo.");
-//     }
-
-//     if (!e && r.statusCode === 200) {
-//       var userList = [];
-//       //console.log(data);
-//       if (JSON.parse(data).message == "Not Found") {
-//         //console.log(data);
-//       }
-//       var githubJSON = JSON.parse(data); //!!this is an array full of objects!
-//       for (var users of githubJSON) { //!!use of not in. 
-//         userList.push(users.login);
-//       }
-//       // console.log(`Retreived final Repolist: `)
-//       // console.log(repoList);
-//       // return repoList;
-//     }
-//   });
-// } //END of getRepoContributors
-
-// // var printTopFive = function printTopFive (){
-
-// // };//END of printTopFive
-
-
-// //Need 2 arguments from the user, am owner and a repo.
-// var input = process.argv.slice(2);
-// if (input.length !== 2) {
-//   console.log("We can't process this request. Please pass in github [owner] and [repo] in order to run avatar download. \n ie: node download_avatars.js jquery jquery ")
-// } else {
-//   getRepoContributors(input[0], input[1], getContStarredList);
-//   //console.log(getRepoContributors);
-// }

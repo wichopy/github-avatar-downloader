@@ -18,7 +18,10 @@
   },
   "homepage": "https://github.com/wichopy/github-avatar-downloader#readme",
   "dependencies": {
+    "bluebird": "^3.4.7",
     "dotenv": "^4.0.0",
-    "request": "^2.79.0"
+    "promise": "^7.1.1",
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1"
   }
 }
